@@ -1,0 +1,50 @@
+
+
+.lightbox{
+	display: table;
+	font-size: 2em;
+	position: fixed;
+	z-index: 999;
+	width: 100%;
+	height: 100%;
+	margin:auto;
+	text-align: center;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,0.5);
+}
+
+.lightbox:target{
+	display: none;
+}
+
+#usernameInputDiv{
+	margin:auto;
+	position:absolute;
+	top:0; bottom:0; left:0; right:0;
+}
+
+#wrapperDiv{
+	margin-top: 50px;	
+}
+
+#messageWindow{
+	margin: auto;
+	position: relative;
+	width: 100%;
+	height: 90%;
+	
+}
+
+#textSubmit {
+	width: auto;
+	height: 150px;
+}
+
+#msgTemplate {
+   display:visible; 
+}
+
+.user {
+  font-weight: bold;
+}

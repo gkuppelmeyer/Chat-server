@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> Server </title>
+		<link href="index.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="lightbox" id="usernameInputDiv">
+			<div id="wrapperDiv">
+				Enter Username<br>
+				<input type="text" id="user"><br>
+				<button id="userButton">Submit</button>
+			</div>
+		</div>
+
+		<div id="messageWindow">
+			<div id="messages"></div>
+		</div>
+
+<!-- 		<div id="textSubmit">
+			<textarea></textarea><br>
+			<button id="messageSend">Send</button>
+		</div> -->
+
+
+		<div id = "msgTemplate">
+			<p>
+				{{time}}<span class = "user">{{username}}</span>: {{message}}
+			</p>
+
+		</div>
+		<input type = "text" id = "msg" placeholder = "Enter message...">
+		<button id = "msgSubmit">Enter Message</button>
+		<!--<div id = "messages"></div> -->
+		<input type="hidden" id="hiddenUser">
+
+	<script src="/Users/user/Desktop/thing.js"></script>
+	</body>
+	
+</html>

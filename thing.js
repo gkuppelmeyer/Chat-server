@@ -32,6 +32,14 @@ document.getElementById("userButton").addEventListener("click", function() {
 	sendChatEntranceRequest(username);
 });
 
+document.getElementById("user").addEventListener("keyup", function(event){
+	event.preventDefault();
+	if(event.keyCode == 13){
+		document.getElementById("userButton").click();
+	}
+});
+
+
 document.getElementById("msgSubmit").addEventListener("click", function() {
   var msg = document.getElementById("msg").value;
   var username = document.getElementById("hiddenUser").value;
@@ -60,6 +68,7 @@ document.getElementById("msgSubmit").addEventListener("click", function() {
   var msgField    = document.getElementById("msg");
   var msgTemplate = document.getElementById("msgTemplate");
   var msgDisplay  = document.getElementById("messages");
+
   
   var d = new Date();
   var n = d.getHours() % 12 + ":" + d.getMinutes() + ":" + d.getSeconds();
@@ -102,8 +111,10 @@ document.getElementById("msgSubmit").addEventListener("click", function() {
 }
   console.log(msgTemplate);
   console.log(document.getElementById("msgTemplate"));
-  document.getElementById("msgTemplate").childNodes[0].nodeValue = "CHANGED";
+  //document.getElementById("msgTemplate").childNodes[0].nodeValue = "CHANGED";
+  msgTemplate.id = "nothing";
   msgDisplay.appendChild(instantiateNode(msgTemplate));
+  msgTemplate.id = "msgTemplate";
   msgField.value = "";
 });
 

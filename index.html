@@ -25,7 +25,7 @@
 
 		<div id = "msgTemplate">
 			<p>
-				{{time}}<span class = "user">{{username}}</span>: {{message}}
+				<span class = "user"><!--  ({{time}})  -->{{username}}</span>: {{message}}
 			</p>
 
 		</div>
@@ -33,7 +33,6 @@
 			<input type = "text" id = "msg" placeholder = "Enter message...">
 			<button id = "msgSubmit">Enter Message</button>
 		</div>
-		<!--<div id = "messages"></div> -->
 		<input type="hidden" id="hiddenUser">
 
 	<script src="thing.js"></script>

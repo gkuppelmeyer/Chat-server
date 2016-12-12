@@ -1,29 +1,35 @@
+console.log("Server On!");
 var http = require("http");
 var chatList = [];
 var routes = [];
-addRoute("GET", /^\/$/, addResponse);
-addRoute("GET", /^\/\?user=\w+$/, userWelcome);
-addRoute("GET", /^\/\?user=\w+&msg=\w+$/, userMessage);
+addRoute("GET", /\/$/, addResponse);
+addRoute("GET", /\/\?user=\w+$/, userWelcome);
+addRoute("GET", /\/\?user=(\w+)&msg=(\w+)$/, userMessage);
 var server = http.createServer(function(request, response) { 
 	response.writeHead(200, {"Content-Type": "text/html", "Access-control-allow-origin": "*"}); 
 	request.name = request.connection.remoteAddress + ":" + request.connection.remotePort;
 	resolve(request, response);
 	request.on('close', function(){
-		console.log("closed");
 		chatList.splice(chatList.indexOf(response),1);
-		broadcast(" left the chat room. \n", "Server" + response.name);
+		var dataString = JSON.stringify({
+			event: "leave",
+			username: response.name
+		});
+		broadcast(dataString);
+		response.end();
 	});
 
 }); 
 
 server.listen(8000);
 
-function broadcast(message, client){
+function broadcast(dataStr){
 	chatList.forEach(function(participant){
-		participant.write("<p>" + client + " : " + message + "</p>");
-		chatList = [];
+		//console.log(dataStr);
+		participant.write(dataStr);
+		participant.end();
 	});
-
+	chatList = [];
 }
 
 function addRoute(method, url, handler){
@@ -36,24 +42,31 @@ function addRoute(method, url, handler){
 
 
 function addResponse(request, response, data){
+	//console.log("1");
+	data.event = "stalk";
 	chatList.push(response);
-	
 }
 
 function userWelcome(request, response, data){
-	response.write("<h1>Welcome to the Chat <code>" + data.username + " \n </code>!!</h1>"); 
+	//console.log("2");
+	data.event = "join";
+	var dataString = JSON.stringify(data);
 	response.name = data.username;
-	chatList.push(response);
-	broadcast(data.username + " entered the chat room. \n", "Server");
-	console.log(response.name + " connected to the server.");
+	data.message = data.message;
+	// chatList.push(response);
+	response.write(dataString);
+	broadcast(dataString);
 	response.end();
 }
 
 function userMessage(request, response, data){
+	//console.log("3");
+	data.event = "message";
+	//console.log(data);
+	var dataString = JSON.stringify(data);
 	response.name = data.username;
-	chatList.push(response);
-	broadcast(data.message, data.username);
-	console.log(response.name);
+	broadcast(dataString);
+	response.end();
 }
 
 function resolve(request, response){
@@ -68,14 +81,18 @@ function resolve(request, response){
 				message: ''
 			}
 
-			var stringUrl = reqUrl; 
-			var urlAfterQuestionMark = stringUrl.split("/?"); //var[0] is empty, var[1] is everything after
-			if(urlAfterQuestionMark[1]){
-				var getMessage = urlAfterQuestionMark[1].split("=");
-				var getUsername = getMessage[1].split("&"); //splits the name from &msg.
-				data.message = getMessage[2];
-				data.username = getUsername[0];
-			
+			var stringUrl = reqUrl;
+			//console.log(stringUrl);
+			var regexUser = /\/\?user=(\w+)/;
+			var regexMessage = /&msg=(\w+)$/;
+			var execUser = regexUser.exec(stringUrl);
+			var execMessage = regexMessage.exec(stringUrl);
+			//console.log(execUser);
+			data.username = execUser;
+			if (execMessage != null){
+				data.message = execMessage[1];
+			} else {
+				data.message = null;
 			}
 
 			routes[i].handler(request, response, data);
@@ -83,3 +100,5 @@ function resolve(request, response){
 		}
 	}
 }
+
+

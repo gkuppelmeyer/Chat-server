@@ -119,8 +119,10 @@ chatServer.on("message", function(data) {
   // console.log("data from .on after time:"+JSON.stringify(data));
   var clonedTemplate = instantiateTemplate("msgTemplate", data);
   console.log(clonedTemplate);
+  msgTemplate.id = "nothing";
   // clonedTemplate.style.display = "inline";
   msgDisplay.appendChild(clonedTemplate);
+  msgTemplate.id = "msgTemplate";
   // msgField.value = "";
   window.scrollTo(0,document.body.scrollHeight);
 });

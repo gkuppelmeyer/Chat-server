@@ -24,8 +24,12 @@ var server = http.createServer(function(request, response) {
 server.listen(8000);
 
 function broadcast(dataStr){
+
 	chatList.forEach(function(participant){
-		//console.log(dataStr);
+		// participant.name = "jerry";
+		console.log("1");
+		console.log(dataStr);
+
 		participant.write(dataStr);
 		participant.end();
 	});
@@ -38,17 +42,18 @@ function addRoute(method, url, handler){
 		url : url,
 		handler : handler
 	});
+	// console.log("route add: " + method + ", " + url + ", " + handler)
 }
 
 
 function addResponse(request, response, data){
-	//console.log("1");
+	console.log("Other");
 	data.event = "stalk";
 	chatList.push(response);
 }
 
 function userWelcome(request, response, data){
-	//console.log("2");
+	console.log("Join");
 	data.event = "join";
 	var dataString = JSON.stringify(data);
 	response.name = data.username;
@@ -60,9 +65,10 @@ function userWelcome(request, response, data){
 }
 
 function userMessage(request, response, data){
-	//console.log("3");
+	console.log("Message");
 	data.event = "message";
 	//console.log(data);
+	data.message = data.message.split('%20').join(' ').split('%27').join('\'');
 	var dataString = JSON.stringify(data);
 	response.name = data.username;
 	broadcast(dataString);
@@ -78,19 +84,31 @@ function resolve(request, response){
 			
 			var data = {
 				username: '',
-				message: ''
+				message: '',
+				event: ''
 			}
 
 			var stringUrl = reqUrl;
-			//console.log(stringUrl);
+			// console.log(stringUrl);
 			var regexUser = /\/\?user=(\w+)/;
-			var regexMessage = /&msg=(\w+)$/;
+			var regexMessage = /\&msg=(\w+)$/;
+
 			var execUser = regexUser.exec(stringUrl);
 			var execMessage = regexMessage.exec(stringUrl);
-			//console.log(execUser);
-			data.username = execUser;
+			// console.log("regex " + execUser);
+			// console.log("regex " + execMessage);
+			// console.log("execUser " + execUser);
+			if(execUser != null) {
+				data.username = execUser;
+			} else {
+				data.username = null;
+			}
+			
 			if (execMessage != null){
+				// newMessage = execMessage[1].replace(/%20/g, " ");
+				// data.message = newMessage;
 				data.message = execMessage[1];
+
 			} else {
 				data.message = null;
 			}
